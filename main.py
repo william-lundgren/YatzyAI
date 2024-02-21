@@ -8,7 +8,7 @@ def get_two_pair(dice):
     # If there is a two pair the sorted list must look like XYYZZ or YYXZZ or YYZZX depending on number sizes
     for i in (0, 2, 4):
         copied_list = sorted_dice.copy()
-        copied_list.pop(i) # remove the odd number that is not a pair, must be on of these 3 as above
+        copied_list.pop(i)  # remove the odd number that is not a pair, must be on of these 3 as above
         if copied_list.count(copied_list[0]) == 2 and copied_list.count(copied_list[-1]) == 2:
             return sum(copied_list)
     return 0
@@ -148,8 +148,27 @@ def reroll(dice):
 def setup():
     game_over = False
     print("Lets play!")
+    score = {
+        "aces": -1,
+        "twos": -1,
+        "threes": -1,
+        "fours": -1,
+        "fives": -1,
+        "sixes": -1,
+        "pair": -1,
+        "two pair": -1,
+        "three of a kind": -1,
+        "four of a kind": -1,
+        "full house": -1,
+        "small straight": -1,
+        "large straight": -1,
+        "yatzy": -1,
+        "chance": -1
+    }
 
-    while not game_over:
+    # Game is over when no more values to fill
+    while -1 in score.values():
+        print("Rolling!")
         # Start by rolling 5 dice
         dice = roll_dice(5)
         old_dice = dice.copy()
@@ -162,8 +181,9 @@ def setup():
             # They wanted to quit
             if old_dice == dice:
                 break
-        print(check_score(dice))
-        game_over = True  # testing 1 round
+        key, value = check_score(dice)
+        score[key] = value
+        print(f"{score}\n")
 
 
 def check_score(dice):
@@ -184,8 +204,12 @@ def check_score(dice):
         "yatzy": 50 if len(set(dice)) == 1 else 0,
         "chance": sum(dice)
     }
+    print(ALL_SCORES)
+    inp = input("Choose what score to write down!: ")
 
-    return ALL_SCORES
+    print(f"Chose: {list(ALL_SCORES.keys())[int(inp) - 1]}")
+
+    return list(ALL_SCORES.keys())[int(inp) - 1], ALL_SCORES[list(ALL_SCORES.keys())[int(inp) - 1]]
 
 
 def main():
